@@ -24,10 +24,11 @@ object Day1 {
                 .sum()
         }
 
-        println(sums.max())
+        println("Max calories: ${sums.max()}")
+        println("Sum of top 3 elve calories: ${sums.sortedDescending().subList(0, 3).sum()}")
     }
 }
 
-fun main(args: Array<String>) {
+fun main() {
     Day1.elveCalories()
 }
