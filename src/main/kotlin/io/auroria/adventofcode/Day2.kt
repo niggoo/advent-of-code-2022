@@ -3,28 +3,29 @@ package io.auroria.adventofcode
 import java.lang.RuntimeException
 
 
-enum class RPSChoice(val score: Int) {
-    Rock(1),
-    Paper(2),
-    Scissor(3);
+object Day2Task1 {
+    enum class RPSChoice(val score: Int) {
+        Rock(1),
+        Paper(2),
+        Scissor(3);
 
-    companion object {
-        fun of(charRepresentation: String) = when (charRepresentation) {
-            "A", "X" -> Rock
-            "B", "Y" -> Paper
-            "C", "Z" -> Scissor
-            else -> throw RuntimeException("Bad input to convert to RPSChoice $charRepresentation")
+        companion object {
+            fun of(charRepresentation: String) = when (charRepresentation) {
+                "A", "X" -> Rock
+                "B", "Y" -> Paper
+                "C", "Z" -> Scissor
+                else -> throw RuntimeException("Bad input to convert to RPSChoice $charRepresentation")
+            }
         }
     }
-}
 
-enum class RPSMatchOutcome(val score: Int) {
-    Win(6),
-    Draw(3),
-    Loss(0)
-}
+    enum class RPSMatchOutcome(val score: Int) {
+        Win(6),
+        Draw(3),
+        Loss(0)
+    }
 
-object Day2 {
+
     fun rsp() {
         val data = this::class.java.getResourceAsStream("/day2/input")!!
             .bufferedReader()
@@ -69,9 +70,84 @@ object Day2 {
                 }
             }
         }
+}
 
+object Day2Task2 {
+
+    enum class RPSDesiredOutcome(val score: Int) {
+        Loss(0),
+        Win(6),
+        Draw(3);
+
+        companion object {
+            fun of(charRepresentation: String) = when (charRepresentation) {
+                "X" -> Loss
+                "Y" -> Draw
+                "Z" -> Win
+                else -> throw RuntimeException("Bad input to convert to RPSChoice $charRepresentation")
+            }
+        }
+    }
+
+    enum class RPSChoice(val score: Int) {
+        Rock(1),
+        Paper(2),
+        Scissor(3);
+
+        companion object {
+            fun of(charRepresentation: String) = when (charRepresentation) {
+                "A" -> Rock
+                "B" -> Paper
+                "C" -> Scissor
+                else -> throw RuntimeException("Bad input to convert to RPSChoice $charRepresentation")
+            }
+        }
+    }
+
+
+    fun rsp() {
+        val data = this::class.java.getResourceAsStream("/day2/input")!!
+            .bufferedReader()
+            .readLines()
+
+        val followedNewStrategy = data
+            .filter { it.trim().isNotEmpty() }
+            .map {
+                val tuple = it.split(" ")
+                Pair(RPSChoice.of(tuple.first()), RPSDesiredOutcome.of(tuple.last()))
+            }.map {
+                val myChoice = decideChoice(it.first, it.second)
+                it.second.score + myChoice.score
+            }
+
+        println("New Total score: ${followedNewStrategy.sum()}")
+
+    }
+
+    private fun decideChoice(opponentChoice: RPSChoice, desiredOutcome: RPSDesiredOutcome): RPSChoice {
+        return when (desiredOutcome) {
+            RPSDesiredOutcome.Loss -> {
+                when (opponentChoice) {
+                    RPSChoice.Rock -> RPSChoice.Scissor
+                    RPSChoice.Paper -> RPSChoice.Rock
+                    RPSChoice.Scissor -> RPSChoice.Paper
+                }
+            }
+
+            RPSDesiredOutcome.Win -> {
+                when (opponentChoice) {
+                    RPSChoice.Rock -> RPSChoice.Paper
+                    RPSChoice.Paper -> RPSChoice.Scissor
+                    RPSChoice.Scissor -> RPSChoice.Rock
+                }
+            }
+
+            RPSDesiredOutcome.Draw -> opponentChoice
+        }
+    }
 }
 
 fun main() {
-    Day2.rsp()
+    Day2Task1.rsp()
+    Day2Task2.rsp()
 }
