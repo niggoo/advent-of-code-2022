@@ -24,7 +24,14 @@ object Day4 {
                     && pair.second.endInclusive >= pair.first.endInclusive)
         }
 
+        val countOverlappingAssignmentBlocks = mappedDataPairs.filter { pair ->
+            pair.first.toList()
+                .intersect(pair.second.toList())
+                .isNotEmpty()
+        }
+
         println("Overlapping assignment count: ${overlappingAssignments.count()}")
+        println("Overlapping assignment block count sum: ${countOverlappingAssignmentBlocks.count()}")
     }
 
 }
