@@ -17,12 +17,37 @@ object Day5 {
     }
 
     fun supplyStacks() {
+        val stackListPart1 = loadStack()
+        val stackListPart2 = loadStack()
+        val moves = loadMoves()
+
+
+        moves.forEach { move ->
+            repeat(move.first) {
+                val removed = stackListPart1[move.second].removeLast()
+                stackListPart1[move.third].addLast(removed)
+            }
+        }
+
+        moves.forEach { move ->
+            (1..move.first).map {
+                stackListPart2[move.second].removeLast()
+            }.asReversed().forEach { removed ->
+                stackListPart2[move.third].addLast(removed)
+            }
+        }
+
+        println("Part 1 - Creates on top: ${stackListPart1.joinToString("") { it.last() }}")
+        println("Part 2 - Creates on top: ${stackListPart2.joinToString("") { it.last() }}")
+    }
+
+    private fun loadStack(): List<ArrayDeque<String>> {
         val data = this::class.java.getResourceAsStream("/day5/input")!!
             .bufferedReader()
             .readLines()
 
         val startData = data.filter { line -> line.contains("[A-Z]+".toRegex()) }
-        val moveData = data.filter { line -> line.startsWith("move ") }
+
 
         val reversedSingleParts = startData.asReversed()
             .map { it.toList() }
@@ -31,27 +56,25 @@ object Day5 {
             .filter { it.contains("[A-Z]+".toRegex()) }
             .map { it.split("").filter { it.isNotEmpty() } }
 
-        val stackList = transposedData.map { ArrayDeque(it) }
+        return transposedData.map { ArrayDeque(it) }
+    }
 
+    private fun loadMoves(): List<Triple<Int, Int, Int>> {
+        val data = this::class.java.getResourceAsStream("/day5/input")!!
+            .bufferedReader()
+            .readLines()
+
+        val moveData = data.filter { line -> line.startsWith("move ") }
         val moves = moveData.map { str ->
             val matchResults = Regex("move\\s(\\d+)\\sfrom\\s(\\d+)\\sto\\s(\\d+)")
                 .matchEntire(str)!!.groupValues
                 .slice(1..3)
                 .map { it.toInt() }
 
-
             Triple(matchResults[0], matchResults[1] - 1, matchResults[2] - 1)
         }
 
-
-        moves.forEach { move ->
-            repeat(move.first) {
-                val removed = stackList[move.second].removeLast()
-                stackList[move.third].addLast(removed)
-            }
-        }
-
-        println("Creates on top: ${stackList.map { it.last() }.joinToString("")}")
+        return moves
     }
 }
 
