@@ -4,15 +4,15 @@ package io.auroria.adventofcode
 object Day5 {
 
     private fun <T> transpose(list: List<List<T>>): List<List<T>> {
-        val N = list.map { it.size }.max()
+        val n = list.maxOfOrNull { it.size }!!
 
         val iterList = list.map { it.iterator() }
 
-        return (0..N - 1)
+        return (0 until n)
             .map {
                 iterList
                     .filter { it.hasNext() }
-                    .map { m -> m.next() }
+                    .map { it.next() }
             }
     }
 
@@ -54,7 +54,7 @@ object Day5 {
         val transposedData = transpose(reversedSingleParts)
             .map { it.joinToString("").trim() }
             .filter { it.contains("[A-Z]+".toRegex()) }
-            .map { it.split("").filter { it.isNotEmpty() } }
+            .map { itemStr -> itemStr.split("").filter { it.isNotEmpty() } }
 
         return transposedData.map { ArrayDeque(it) }
     }
