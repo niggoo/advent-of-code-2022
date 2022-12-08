@@ -1,7 +1,5 @@
 package io.auroria.adventofcode
 
-import java.lang.RuntimeException
-
 object Day3 {
     fun rucksackReorganization() {
         val data = this::class.java.getResourceAsStream("/day3/input")!!

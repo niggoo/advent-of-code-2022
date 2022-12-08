@@ -1,6 +1,5 @@
 package io.auroria.adventofcode
 
-
 object Day5 {
 
     private fun <T> transpose(list: List<List<T>>): List<List<T>> {

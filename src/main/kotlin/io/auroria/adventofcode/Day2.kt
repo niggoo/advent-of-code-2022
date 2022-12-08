@@ -1,8 +1,5 @@
 package io.auroria.adventofcode
 
-import java.lang.RuntimeException
-
-
 object Day2Task1 {
     enum class RPSChoice(val score: Int) {
         Rock(1),
