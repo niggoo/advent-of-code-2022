@@ -37,8 +37,7 @@ object Day9 {
         val tailPositionsPart1 = followPositions(headPositions)
         println("Part 1 - #TailPositions: " + tailPositionsPart1.toSet().count())
 
-        val knots = (1..9).map { it.toString() }
-        val tailPositionsPart2 = knots.fold(headPositions) { knotBeforePositions, _ ->
+        val tailPositionsPart2 = (1..9).fold(headPositions) { knotBeforePositions, _ ->
             followPositions(knotBeforePositions)
         }
 
